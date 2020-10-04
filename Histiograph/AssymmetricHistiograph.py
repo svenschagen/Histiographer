@@ -1,13 +1,12 @@
-from BaseHistiographer import BaseHistiographer
+from Histiograph.BaseHistiograph import BaseHistiograph
 
-
-class AssymmetricHistiographer(BaseHistiographer):
+class AssymmetricHistiograph(BaseHistiograph):
     """
-    Histiographer module that sets up a arbitrary bucket size histogram.
+    Histiograph module that sets up a arbitrary bucket size histogram.
     """
     def __init__(self, bucket_boundaries):
-        super(self.__init__(bucket_boundaries))
-        self._lower_edges = bucket_boundaries[0:-1]
+        super().__init__(bucket_boundaries[0], bucket_boundaries[-1], len(bucket_boundaries)-1)
+        self._lower_edges = bucket_boundaries[0:-2]
         self._upper_edges = bucket_boundaries[1:]
         self._start = round(self._nbins/2)
 
@@ -28,12 +27,7 @@ class AssymmetricHistiographer(BaseHistiographer):
         """
         Utilise Newtonian search to find the proper bucket and add the weight.
         """
-        # Check if the value is within the bounds of this histiogram.
-        if value < self._min:
-            return
-        if self._max < value:
-            return
-
-        idx = self._find_bin(value)
-        self._buckets[idx] = self._buckets[idx] + weight
-        return
+        # Check if the value is within the bounds of this histiograph.
+        if self.value_in_range(value):
+            idx = self._find_bin(value)
+            self._buckets[idx] = self._buckets[idx] + weight
